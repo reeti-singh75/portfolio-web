@@ -1,5 +1,6 @@
 import React from 'react';
 import reetuImg from "./image/reetu.jpeg";
+import ResumeSection from "./components/ResumeSection";
 import './index.css';
 
 function App() {
@@ -29,7 +30,7 @@ function App() {
             Reeti Singh
           </div>
           <div style={{ display: 'flex', gap: '2rem' }}>
-            {['Hero', 'Passion', 'Challenges', 'Goals', 'Hobbies', 'Education', 'Projects'].map((item) => (
+            {['Hero', 'Passion', 'Challenges', 'Goals', 'Hobbies', 'Education', 'Resume', 'Projects'].map((item) => (
               <button
                 key={item}
                 onClick={() => scrollToSection(item.toLowerCase())}
@@ -69,8 +70,29 @@ function App() {
                 Learning is not just about books — it's about building, failing, fixing, and celebrating every small win.
               </p>
               <div className="hero-cta animate-in delay-3">
-                <a href="#projects" className="btn btn-primary">View My Work</a>
-                <a href="#contact" className="btn btn-secondary">Get In Touch</a>
+                <a href="#projects" className="btn btn-primary" aria-label="View my work">View My Work</a>
+                <a href="#contact" className="btn btn-outline" aria-label="Get in touch">Get In Touch</a>
+
+                <a
+                  className="btn btn-primary"
+                  href="https://drive.google.com/file/d/1BmONLGaOJzorenAnxmDRktpejtlYQKWP/view"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="View resume in new tab"
+                >
+                  View Resume
+                </a>
+
+                <a
+                  className="btn btn-outline"
+                  href="https://drive.google.com/uc?export=download&id=1BmONLGaOJzorenAnxmDRktpejtlYQKWP"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
+                  aria-label="Download resume"
+                >
+                  Download Resume
+                </a>
               </div>
             </div>
             <div className="hero-image animate-in delay-2">
@@ -290,6 +312,8 @@ function App() {
           </div>
         </div>
       </section>
+
+      <ResumeSection />
 
       {/* Projects Section */}
       <section id="projects">
