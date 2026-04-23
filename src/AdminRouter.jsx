@@ -12,8 +12,8 @@ const AdminRouter = () => {
         {/* Public portfolio at / */}
         <Route path="/" element={<App />} />
 
-        {/* Admin login */}
-        <Route path="/admin/login" element={<AdminLogin />} />
+        {/* Admin login (public) - available at /login per spec */}
+        <Route path="/login" element={<AdminLogin />} />
 
         {/* Protected admin dashboard */}
         <Route path="/admin" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />

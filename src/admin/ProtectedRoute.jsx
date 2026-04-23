@@ -16,11 +16,11 @@ const ProtectedRoute = ({ children }) => {
   }, []);
 
   if (loading) return (
-    <div style={{minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#04070d', color: '#fff'}}>Loading...</div>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#04070d', color: '#fff' }}>Loading...</div>
   );
 
   if (!user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return children;

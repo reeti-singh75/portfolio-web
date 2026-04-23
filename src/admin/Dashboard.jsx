@@ -22,7 +22,7 @@ const Dashboard = () => {
           id: doc.id,
           ...doc.data()
         }));
-        
+
         // Messages ko time ke hisaab se sort karna (Latest pehle)
         msgs.sort((a, b) => {
           const ta = a.sentAt && a.sentAt.toMillis ? a.sentAt.toMillis() : 0;
@@ -58,14 +58,14 @@ const Dashboard = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      navigate('/admin/login');
+      navigate('/login');
     } catch (error) {
       console.error("Error signing out: ", error);
     }
   };
 
   return (
-    <div className="admin-bg" style={{ minHeight: '100vh', padding: '40px 20px' }}>
+    <div className="admin-root">
       <div className="admin-container">
 
         {/* Header */}
@@ -77,7 +77,7 @@ const Dashboard = () => {
             <div className="admin-sub">Manage contact messages</div>
           </div>
           <div>
-            <button onClick={handleLogout} className="admin-btn">Logout</button>
+            <button onClick={handleLogout} className="admin-btn-outline">Logout</button>
           </div>
         </div>
 
@@ -111,7 +111,7 @@ const Dashboard = () => {
                   <div className="col col-time">{(msg.sentAt && msg.sentAt.toDate) ? msg.sentAt.toDate().toLocaleString() : msg.timestampLabel || '—'}</div>
                 </div>
                 <div className="row-actions">
-                  <button className="admin-btn-outline" onClick={() => { setSelected(msg); setModalOpen(true); }}>View Message</button>
+                  <button className="admin-btn" onClick={() => { setSelected(msg); setModalOpen(true); }}>View Message</button>
                   <button className="admin-btn-outline" onClick={() => handleDelete(msg.id)}>Delete</button>
                 </div>
               </div>
@@ -135,7 +135,7 @@ const Dashboard = () => {
               </div>
               <div className="admin-modal-footer">
                 <button className="admin-btn-outline" onClick={() => setModalOpen(false)}>Close</button>
-                <button className="admin-btn" onClick={() => { handleDelete(selected.id); setModalOpen(false); }}>Delete</button>
+                <button className="admin-btn-outline" onClick={() => { handleDelete(selected.id); setModalOpen(false); }}>Delete</button>
               </div>
             </div>
           </div>

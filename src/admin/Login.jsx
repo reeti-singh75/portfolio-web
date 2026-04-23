@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './admin.css';
 import { auth } from '../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -10,6 +10,14 @@ const AdminLogin = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  // If already authenticated, redirect to /admin
+  useEffect(() => {
+    const unsub = auth.onAuthStateChanged?.((user) => {
+      if (user) navigate('/admin', { replace: true });
+    });
+    return () => unsub && unsub();
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
