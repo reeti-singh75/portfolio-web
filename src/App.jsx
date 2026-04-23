@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import reetuImg from "./image/reetu.jpeg";
 import ResumeSection from "./components/ResumeSection";
+import ContactSection from "./components/ContactSection";
 import './index.css';
 
 function App() {
@@ -10,6 +11,31 @@ function App() {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const menuRef = useRef(null);
+  const burgerRef = useRef(null);
+
+  // Track viewport changes and close mobile menu on outside clicks
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    const handleOutsideClick = (e) => {
+      if (!mobileOpen) return;
+      if (menuRef.current && !menuRef.current.contains(e.target) && burgerRef.current && !burgerRef.current.contains(e.target)) {
+        setMobileOpen(false);
+      }
+    };
+    document.addEventListener('click', handleOutsideClick);
+
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [mobileOpen]);
 
   return (
     <div className="app">
@@ -26,32 +52,86 @@ function App() {
         borderBottom: '1px solid var(--glass-border)'
       }}>
         <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ fontSize: '1.5rem', fontWeight: '700', background: 'var(--accent-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+
+          {/* Logo */}
+          <div style={{
+            fontSize: '1.5rem',
+            fontWeight: '700',
+            background: 'var(--accent-gradient)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
+          }}>
             Reeti Singh
           </div>
-          <div style={{ display: 'flex', gap: '2rem' }}>
-            {['Hero', 'Passion', 'Challenges', 'Goals', 'Hobbies', 'Education', 'Resume', 'Projects'].map((item) => (
-              <button
-                key={item}
-                onClick={() => scrollToSection(item.toLowerCase())}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: 'var(--text-secondary)',
-                  cursor: 'pointer',
-                  fontSize: '0.95rem',
-                  transition: 'var(--transition-smooth)',
-                  fontFamily: 'inherit'
-                }}
-                onMouseEnter={(e) => e.target.style.color = 'var(--text-primary)'}
-                onMouseLeave={(e) => e.target.style.color = 'var(--text-secondary)'}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
+          {/* Desktop Menu (hidden on small screens) */}
+          {!isMobile && (
+            <div className="nav-links" style={{ display: 'flex', gap: '2rem' }}>
+              {['Hero', 'Passion', 'Challenges', 'Goals', 'Hobbies', 'Education', 'Resume', 'Projects', 'Contact Me'].map((item) => (
+                <button
+                  key={item}
+                  onClick={() => { scrollToSection(item === 'Contact Me' ? 'contact' : item.toLowerCase()); setMobileOpen(false); }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--text-secondary)',
+                    cursor: 'pointer',
+                    fontSize: '0.95rem',
+                    transition: 'var(--transition-smooth)',
+                    fontFamily: 'inherit'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Hamburger (mobile only) */}
+          {isMobile && (
+            <button
+              ref={burgerRef}
+              className="hamburger-btn"
+              aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+              onClick={() => setMobileOpen((s) => !s)}
+              style={{
+                display: 'block',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              {/* simple inline SVGs for burger and close */}
+              {!mobileOpen ? (
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              ) : (
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 6l12 12M6 18L18 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+            </button>
+          )}
+
         </div>
       </nav>
+
+      {/* Mobile slide menu overlay */}
+      <div ref={menuRef} className={`mobile-menu-overlay ${mobileOpen ? 'open' : ''}`}>
+        <div className="mobile-menu-content">
+          {['Hero', 'Passion', 'Challenges', 'Goals', 'Hobbies', 'Education', 'Resume', 'Projects', 'Contact Me'].map((item) => (
+            <button
+              key={item + '-mobile'}
+              onClick={() => { scrollToSection(item === 'Contact Me' ? 'contact' : item.toLowerCase()); setMobileOpen(false); }}
+              className="mobile-menu-item"
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {/* Hero Section */}
       <section id="hero" className="hero">
@@ -430,8 +510,11 @@ function App() {
         </div>
       </section>
 
+      {/* Contact Section (rendered at bottom) */}
+      <ContactSection />
+
       {/* Footer */}
-      <footer id="contact">
+      <footer>
         <div className="container">
           <p>© 2025 Reeti Singh. Built with ❤️ and React.</p>
         </div>

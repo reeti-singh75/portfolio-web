@@ -1,20 +1,31 @@
 /* CSS Variables for Theme */
 :root {
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #12121a;
-  --bg-card: rgba(255, 255, 255, 0.03);
-  --bg-card-hover: rgba(255, 255, 255, 0.06);
+  /* Ekdum dark solid color */
+  --bg-primary: #04070d;
+  --bg-secondary: #080d18;
+
+  --cyan: #3ad5b9;
+  --premium-gradient: linear-gradient(135deg, #2dd4bf 0%, var(--cyan) 50%, #14b8a6 100%);
+  --glass-premium: rgba(15, 23, 42, 0.4);
+  --glass-border-premium: rgba(58, 213, 185, 0.2);
+  --glow-cyan: 0 0 20px rgba(58, 213, 185, 0.5);
+
+  --bg-card: rgba(15, 23, 42, 0.4);
+  --bg-card-hover: rgba(15, 23, 42, 0.8);
   --text-primary: #ffffff;
-  --text-secondary: #a0a0b0;
-  --text-muted: #6b6b7b;
-  --accent-primary: #6366f1;
-  --accent-secondary: #8b5cf6;
-  --accent-tertiary: #ec4899;
-  --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --accent-primary: #3ad5b9;
+  --accent-secondary: #2dd4bf;
+  --accent-tertiary: #14b8a6;
+  --accent-gradient: linear-gradient(135deg, #3ad5b9 0%, #2dd4bf 50%, #14b8a6 100%);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   --card-border-radius: 20px;
   --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* navbar offsets used to avoid fixed-nav overlap when scrolling */
+  --nav-offset-desktop: 76px;
+  --nav-offset-mobile: 68px;
 }
 
 /* Reset & Base Styles */
@@ -31,25 +42,59 @@ html {
 body {
   font-family: 'Poppins', sans-serif;
   background: var(--bg-primary);
+  /* Solid dark background */
   color: var(--text-primary);
   line-height: 1.6;
   overflow-x: hidden;
 }
 
-/* Background Effect */
+/* Reserve space for the fixed navbar so hero text is not hidden under it */
+.app {
+  padding-top: 76px;
+  /* matches nav height + small gap */
+}
+
+@media (max-width: 768px) {
+  .app {
+    padding-top: 68px;
+  }
+}
+
+/* Prevent fixed navbar from covering anchored/scroll targets (no visual change) */
+section {
+  scroll-margin-top: calc(var(--nav-offset-desktop) + 8px);
+}
+
+@media (max-width: 768px) {
+  section {
+    scroll-margin-top: calc(var(--nav-offset-mobile) + 8px);
+  }
+
+  .hero {
+    padding-top: calc(var(--nav-offset-mobile) + 8px);
+  }
+}
+
+/* Global media/layout safety: ensure images and flex children can shrink on small screens */
+img,
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Allow flex children to shrink to avoid overflow on small viewports */
+.hero-content>*,
+.contact-container>*,
+.projects-grid>*,
+.lessons-grid>*,
+.passion-grid>* {
+  min-width: 0;
+}
+
+/* Background Effect - Removed to make background ONE solid color */
 body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-    radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 60%);
-  pointer-events: none;
-  z-index: -1;
+  display: none;
 }
 
 /* Container */
@@ -61,8 +106,11 @@ body::before {
 
 /* Section Styles */
 section {
-  padding: 6rem 0;
+  /* Keep original vertical spacing but ensure safe horizontal padding so content never touches edges */
+  padding: 6rem 12px;
   position: relative;
+  background: var(--bg-primary);
+  /* Ensure solid background everywhere */
 }
 
 .section-title {
@@ -99,7 +147,7 @@ section {
   background: var(--bg-card-hover);
   transform: translateY(-5px);
   box-shadow: var(--glass-shadow);
-  border-color: rgba(99, 102, 241, 0.3);
+  border-color: rgba(58, 213, 185, 0.3);
 }
 
 /* ==================== HERO SECTION ==================== */
@@ -108,6 +156,27 @@ section {
   display: flex;
   align-items: center;
   padding-top: 2rem;
+}
+
+/* Ensure hero text never gets clipped on smaller screens: allow the hero to grow, stack content and remove forced centering */
+@media (max-width: 1024px) {
+  .hero {
+    /* allow content to expand vertically instead of forcing 100vh center which can clip long text */
+    min-height: auto;
+    align-items: flex-start;
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .hero-content {
+    align-items: start;
+    grid-template-columns: 1fr;
+    /* stack by default on medium screens */
+  }
+
+  .hero-text {
+    text-align: left;
+  }
 }
 
 .hero-content {
@@ -170,7 +239,7 @@ section {
 
 .btn-primary:hover {
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 14px 40px rgba(99, 102, 241, 0.28), 0 6px 18px rgba(236, 72, 153, 0.08);
+  box-shadow: 0 14px 40px rgba(58, 213, 185, 0.28);
 }
 
 /* Outlined button style (reusable) */
@@ -182,9 +251,9 @@ section {
 
 .btn-outline:hover {
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), 0 6px 18px rgba(99, 102, 241, 0.06);
-  border-color: rgba(99, 102, 241, 0.25);
-  background: rgba(99, 102, 241, 0.06);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  border-color: rgba(58, 213, 185, 0.25);
+  background: rgba(58, 213, 185, 0.06);
 }
 
 .btn-secondary {
@@ -195,7 +264,7 @@ section {
 
 .btn-secondary:hover {
   border-color: var(--accent-primary);
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(58, 213, 185, 0.1);
 }
 
 /* Hero Image */
@@ -208,7 +277,8 @@ section {
   border-radius: 30px;
   overflow: hidden;
   aspect-ratio: 1;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(236, 72, 153, 0.2));
+  background: rgba(15, 23, 42, 0.4);
+  /* Darkened image background */
 }
 
 .hero-image-wrapper::before {
@@ -216,7 +286,7 @@ section {
   position: absolute;
   inset: 0;
   background: var(--accent-gradient);
-  opacity: 0.1;
+  opacity: 0.05;
 }
 
 .hero-image-placeholder {
@@ -226,7 +296,7 @@ section {
   align-items: center;
   justify-content: center;
   font-size: 8rem;
-  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  background: var(--bg-secondary);
   color: var(--accent-primary);
 }
 
@@ -372,7 +442,7 @@ section {
   text-align: center;
   margin-top: 3rem;
   padding: 2rem;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1));
+  background: rgba(15, 23, 42, 0.4);
   border-radius: var(--card-border-radius);
 }
 
@@ -433,6 +503,8 @@ section {
   border-radius: 50px;
   font-weight: 600;
   font-size: 0.9rem;
+  color: #04070d;
+  /* Made text dark on light gradient for contrast */
 }
 
 .education-item h3 {
@@ -480,7 +552,7 @@ section {
 
 .tech-tag {
   padding: 0.3rem 0.8rem;
-  background: rgba(99, 102, 241, 0.2);
+  background: rgba(58, 213, 185, 0.15);
   border-radius: 50px;
   font-size: 0.8rem;
   color: var(--accent-primary);
@@ -516,12 +588,13 @@ section {
 
 .project-link.demo {
   background: var(--accent-gradient);
-  color: white;
+  color: #04070d;
+  /* Dark text on bright button */
 }
 
 .project-link.demo:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 5px 20px rgba(58, 213, 185, 0.3);
 }
 
 .project-link.github {
@@ -532,7 +605,7 @@ section {
 
 .project-link.github:hover {
   border-color: var(--accent-primary);
-  background: rgba(99, 102, 241, 0.1);
+  background: rgba(58, 213, 185, 0.1);
 }
 
 /* ==================== FOOTER ==================== */
@@ -540,6 +613,8 @@ footer {
   padding: 3rem 0;
   text-align: center;
   border-top: 1px solid var(--glass-border);
+  background: var(--bg-primary);
+  /* Solid color */
 }
 
 footer p {
@@ -604,6 +679,38 @@ footer p {
   }
 }
 
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+@keyframes glowPulse {
+
+  0%,
+  100% {
+    box-shadow: var(--glow-cyan);
+  }
+
+  50% {
+    box-shadow: 0 0 30px rgba(58, 213, 185, 0.8);
+  }
+}
+
+@keyframes iconSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .loading-text {
   color: var(--text-secondary);
   font-size: 1.1rem;
@@ -624,8 +731,12 @@ footer p {
     gap: 3rem;
   }
 
-  .hero-text h1 {
-    font-size: 3rem;
+ .hero-text h1 {
+    font-size: clamp(2rem, 7vw, 3rem) !important;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    line-height: 1.3;
   }
 
   .hero-tagline {
@@ -639,6 +750,192 @@ footer p {
   .hero-image {
     max-width: 400px;
     margin: 0 auto;
+  }
+}
+
+/* NAVBAR & GLOBAL RESPONSIVE FIXES */
+@media (max-width: 768px) {
+  nav .container {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  /* Move menu to next line and allow wrap without overflow */
+  nav .container>div:nth-child(2) {
+    width: 100%;
+    display: flex !important;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    padding: 0 0.5rem;
+  }
+
+  nav .container>div:nth-child(1) {
+    /* keep logo centered */
+    text-align: center;
+  }
+
+  /* Extra safety for very small viewports: ensure long paragraphs wrap and do not overflow or get clipped */
+  @media (max-width: 480px) {
+    .hero {
+      padding-top: 1.5rem;
+      padding-bottom: 1.5rem;
+    }
+
+    .hero-text .hero-intro,
+    .hero-text .hero-tagline {
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+    }
+
+    .hero-text .hero-intro {
+      font-size: 0.98rem;
+      line-height: 1.7;
+    }
+
+    .hero-image {
+      margin-top: 1rem;
+      max-width: 280px;
+    }
+  }
+
+  /* make navbar buttons smaller on narrow screens */
+  nav .container button {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Hamburger & mobile menu styles (behavior only) */
+.hamburger-btn {
+  color: var(--text-secondary);
+}
+
+.mobile-menu-overlay {
+  display: none;
+}
+
+.mobile-menu-overlay.open {
+  display: block;
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 7, 13, 0.6);
+  z-index: 1200;
+}
+
+.mobile-menu-content {
+  position: absolute;
+  top: 70px;
+  right: 16px;
+  width: calc(100% - 32px);
+  max-width: 320px;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  animation: slideDown 220ms ease-out;
+}
+
+.mobile-menu-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.mobile-menu-item+.mobile-menu-item {
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-6px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Show hamburger and hide desktop links on small screens */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none !important;
+  }
+
+  .hamburger-btn {
+    display: block !important;
+    color: var(--text-secondary);
+  }
+}
+
+/* CONTACT SECTION: stack columns on small screens and reduce paddings */
+@media (max-width: 640px) {
+  .contact-container {
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 8px;
+    align-items: stretch;
+  }
+
+  .contact-info,
+  .contact-form-card {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .contact-title {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .contact-desc {
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+
+  .contact-form-card {
+    padding: 20px;
+    max-width: 100%;
+  }
+
+  .contact-row {
+    gap: 10px;
+  }
+
+  .contact-submit-btn {
+    padding: 14px;
+    font-size: 1rem;
+    border-radius: 10px;
+  }
+
+  .contact-box {
+    padding: 12px 14px;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .contact-container {
+    gap: 30px;
+  }
+
+  .contact-title {
+    font-size: 2.6rem;
+  }
+
+  .contact-form-card {
+    padding: 28px;
   }
 }
 
@@ -710,12 +1007,354 @@ footer p {
   animation-delay: 0.5s;
 }
 
+/* Contact Premium Styles */
+.contact-section {
+  /* Removed Background gradients to keep it single solid dark color */
+  background: var(--bg-primary);
+  position: relative;
+  /* allow overflowing content to be visible so nothing is clipped */
+  overflow: visible;
+}
 
+/* Removed the glowing background bubbles from contact section too */
+.contact-section::before {
+  display: none;
+}
 
+.glass-premium {
+  background: var(--glass-premium);
+  backdrop-filter: blur(32px);
+  border: 1px solid var(--glass-border-premium);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.glass-premium:hover {
+  background: rgba(15, 23, 42, 0.8);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 35px 70px rgba(0, 0, 0, 0.5), 0 0 25px rgba(58, 213, 185, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-color: rgba(58, 213, 185, 0.4);
+}
+
+.contact-card {
+  border-radius: 3rem !important;
+  padding: 2rem !important;
+  margin-bottom: 1.5rem;
+}
+
+.icon-glow {
+  background: rgba(58, 213, 185, 0.1);
+  /* Subtler background for icons */
+  transition: all 0.3s ease;
+}
+
+.icon-glow:hover {
+  background: var(--premium-gradient);
+  animation: glowPulse 1.5s infinite;
+  filter: drop-shadow(0 0 10px rgba(58, 213, 185, 0.6));
+}
+
+.form-field {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.form-floating-label {
+  position: absolute;
+  top: 1rem;
+  left: 1.5rem;
+  font-size: 0.95rem;
+  color: #94a3b8;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  background: transparent;
+  padding: 0 0.5rem;
+}
+
+.form-input:focus~.form-floating-label,
+.form-input:valid~.form-floating-label {
+  top: -0.5rem;
+  left: 1rem;
+  font-size: 0.75rem;
+  color: var(--cyan);
+  font-weight: 500;
+  background: var(--bg-card);
+  /* Add background behind floating label so line doesn't cut it */
+}
+
+.form-input {
+  width: 100%;
+  padding: 1.5rem 1.5rem 1.5rem 1.5rem !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 1.5rem !important;
+  color: white !important;
+  font-size: 1rem;
+  transition: all 0.3s ease !important;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--cyan) !important;
+  box-shadow: var(--glow-cyan) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.shimmer-btn {
+  background: linear-gradient(90deg, var(--premium-gradient), #14b8a6 50%, var(--premium-gradient)) !important;
+  background-size: 300% 100% !important;
+  animation: shimmer 3s infinite !important;
+  position: relative;
+  overflow: hidden;
+  color: #04070d !important;
+  /* Dark text for button */
+}
+
+.shimmer-btn:hover {
+  animation-duration: 1s !important;
+  transform: translateY(-3px) scale(1.03) !important;
+  box-shadow: 0 20px 40px rgba(58, 213, 185, 0.4) !important;
+}
+
+.form-counter {
+  position: absolute;
+  bottom: -1.5rem;
+  right: 1.5rem;
+  font-size: 0.8rem;
+  color: #64748b;
+}
 
 .hero-img {
   width: 100%;
   height: 100%;
   object-fit: contain;
   border-radius: 12px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ==================== CONTACT SECTION STYLES ==================== */
+.contact-section {
+  background-color: #04070d;
+  /* Same Dark solid background */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  padding: 40px 20px;
+}
+
+.contact-container {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  width: 100%;
+  gap: 50px;
+  justify-content: center;
+}
+
+.contact-info {
+  flex: 1;
+  min-width: 320px;
+}
+
+.contact-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.contact-highlight {
+  color: #3ad5b9;
+  /* Bright Teal Accent */
+}
+
+.contact-underline {
+  width: 60px;
+  height: 4px;
+  background-color: #3ad5b9;
+  margin: 20px 0;
+  border-radius: 2px;
+}
+
+.contact-desc {
+  color: #cbd5e1;
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.contact-box {
+  background-color: rgba(15, 23, 42, 0.4);
+  /* Dark Card Background */
+  padding: 15px 20px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.contact-box:hover {
+  border-color: rgba(58, 213, 185, 0.3);
+  transform: translateY(-2px);
+  background-color: rgba(15, 23, 42, 0.6);
+}
+
+.contact-icon {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 20px;
+}
+
+.contact-label {
+  font-size: 0.7rem;
+  color: #3ad5b9;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+
+.contact-value {
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.contact-form-card {
+  background-color: rgba(15, 23, 42, 0.4);
+  /* Dark Card Background */
+  padding: 40px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  flex: 1.2;
+  min-width: 320px;
+  max-width: 600px;
+}
+
+.contact-form-title {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+  font-weight: 700;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contact-row {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.contact-input,
+.contact-textarea {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 12px;
+  color: #ffffff;
+  outline: none;
+  font-size: 1rem;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.contact-input:focus,
+.contact-textarea:focus {
+  border-color: #3ad5b9;
+  box-shadow: 0 0 15px rgba(58, 213, 185, 0.2);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.contact-row .contact-input {
+  flex: 1;
+}
+
+.contact-textarea {
+  resize: none;
+}
+
+.contact-submit-btn {
+  background: linear-gradient(135deg, #3ad5b9 0%, #2dd4bf 50%, #14b8a6 100%);
+  color: #04070d;
+  /* Dark text on bright button */
+  padding: 18px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 800;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.contact-submit-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(58, 213, 185, 0.3);
+}
+
+.contact-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.contact-footer {
+  margin-top: 60px;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+
+
+
+/* Navbar ke peeche chupne wale text ko niche lane ke liye */
+@media (max-width: 768px) {
+  .hero {
+    padding-top: 100px !important; 
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding-top: 90px !important;
+  }
 }

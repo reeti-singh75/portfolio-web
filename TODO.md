@@ -1,17 +1,35 @@
-# Resume Section Enhancement - COMPLETE ✅
+# Contact Section Premium Upgrade TODO
 
-## Final Status:
-- [x] ResumeSection.jsx fully implemented (frontend-only, View/Download buttons, file availability check)
-- [x] Perfectly integrated in App.jsx with navigation link
-- [x] Matches glassmorphism theme (CSS fully styled, responsive)
-- [x] Production-ready for static deployment (Netlify/Vercel)
-- [x] User added /public/resume.pdf
+## Status: 🚀 In Progress
 
-## Test Instructions:
-1. `npm run dev`
-2. Navigate to Resume section (or click "Resume" in nav)
-3. Test "View Resume" (opens new tab) and "Download Resume"
+### 1. ✅ Enhance index.css
+   - Add CSS vars (--cyan, --premium-gradient)
+   - .glass-premium class (stronger blur/shadows)
+   - @keyframes (shimmer, float, glow-pulse, icon-spin)
+   - .contact-particle-bg
+   - Form input styles (floating labels, glow underlines)
+   - Hover animations (scale/glow)
 
-**Task Complete!** 🎉
+### 2. ✅ Update ContactSection.jsx JSX
+   - Add particle bg div
+   - Animate header (fadeUp, glow)
+   - Refactor contact links to floating orbs (glass-premium)
+   - Form: wrap inputs in glass cards, floating labels
+   - Submit: shimmer + spinner
 
+### 3. ✅ Test & Polish
+   - Responsive OK
+   - Form validation OK (10-digit + auto-format)
+   - Hovers/glows/shimmers smooth
+   - Animations staggered
+   - Spacing premium
+
+   - Responsive check (mobile/desktop)
+   - Form validation/submit flow
+   - All hovers/animations
+   - Visual polish (spacing/shadows)
+
+### 4. ✅ Complete
+   - Update TODO complete ✅
+   - attempt_completion
 
